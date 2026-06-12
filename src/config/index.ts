@@ -6,7 +6,7 @@ dotenv.config({
 });
 
 const config = {
-  connection_string: process.abort,
+  connection_string: process.env.CONNECTION_STRING,
   port: Number(process.env.PORT),
 };
 
