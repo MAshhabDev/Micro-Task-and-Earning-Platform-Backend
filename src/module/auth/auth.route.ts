@@ -3,7 +3,6 @@ import { authController } from "./auth.controller";
 
 const route = Router();
 
+route.post("/", authController.signUp);
 
-route.post("/",authController.signUp)
-
-route.post("/",)
+route.post("/", authController.signIn);

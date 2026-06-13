@@ -13,19 +13,25 @@ const signUp = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({
       success: false,
-      message:  "User registration failed!",
+      message: "User registration failed!",
     });
   }
 };
 
+const signIn = async (req: Request, res: Response) => {
+  try {
+    const result = await authService.signInIntoDB(req.body);
+    res.status(200).json({
+      success: true,
+      message: "User Login Successfully",
+      data: result,
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "User did not match",
+    });
+  }
+};
 
-const signIn=async(req:Request,res:Response)=>{
-try {
-    
-} catch (error) {
-    
-}
-}
-
-
-export const authController={signUp}
+export const authController = { signUp,signIn };
