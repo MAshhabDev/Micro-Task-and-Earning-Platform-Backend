@@ -44,4 +44,11 @@ const addTaskInToDb = async (payload: any, coins: number) => {
   return result.rows[0];
 };
 
-export const taskService = { addTaskInToDb };
+const allAvailableTaskInToDb = async() => {
+  const result = await pool.query(
+    `SELECT * FROM tasks WHERE required_workers > 0 ORDER BY id DESC`,
+  );
+
+  return result.rows;
+};
+export const taskService = { addTaskInToDb,allAvailableTaskInToDb };
