@@ -38,4 +38,27 @@ const allAvailableTask=async(req:Request,res:Response)=>{
   }
 
 }
-export const taskController = { addTask,allAvailableTask };
+const myTask=async(req:Request,res:Response)=>{
+  try {
+
+    const id:number=req.user?.id
+    const result =await taskService.myTaskInToDb(id)
+    res.status(200).json({
+      success: true,
+      message: "Data Fetched successfully!",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to load data",
+      data: [],
+    });
+  }
+
+}
+
+
+
+
+export const taskController = { addTask,allAvailableTask, myTask };

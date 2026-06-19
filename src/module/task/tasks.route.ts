@@ -6,3 +6,5 @@ const route = Router();
 route.post("/", taskController.addTask);
 
 route.get("", taskController.allAvailableTask);
+
+route.get("",taskController.myTask)
