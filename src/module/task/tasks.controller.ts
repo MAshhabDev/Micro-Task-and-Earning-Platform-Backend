@@ -20,10 +20,9 @@ const addTask = async (req: Request, res: Response) => {
   }
 };
 
-
-const allAvailableTask=async(req:Request,res:Response)=>{
+const allAvailableTask = async (req: Request, res: Response) => {
   try {
-    const result =await taskService.allAvailableTaskInToDb()
+    const result = await taskService.allAvailableTaskInToDb();
     res.status(200).json({
       success: true,
       message: "Data Fetched successfully!",
@@ -36,13 +35,34 @@ const allAvailableTask=async(req:Request,res:Response)=>{
       data: [],
     });
   }
+};
 
-}
-const myTask=async(req:Request,res:Response)=>{
+const deleteTask = async (req: Request, res: Response) => {
   try {
+    const buyer_id: number = req.user?.id;
 
-    const id:number=req.user?.id
-    const result =await taskService.myTaskInToDb(id)
+    const { id } = req.body;
+    const result = await taskService.deleteTaskInToDb(id as number, buyer_id);
+    res.status(201).json({
+      success: true,
+      message: "Data Deleted successfully!",
+      data: result,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: "Failed to Delete data",
+      data: [],
+    });
+  }
+};
+
+
+
+const myTask = async (req: Request, res: Response) => {
+  try {
+    const id: number = req.user?.id;
+    const result = await taskService.myTaskInToDb(id);
     res.status(200).json({
       success: true,
       message: "Data Fetched successfully!",
@@ -55,10 +75,6 @@ const myTask=async(req:Request,res:Response)=>{
       data: [],
     });
   }
+};
 
-}
-
-
-
-
-export const taskController = { addTask,allAvailableTask, myTask };
+export const taskController = { addTask, allAvailableTask, myTask,deleteTask };

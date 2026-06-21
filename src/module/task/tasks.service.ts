@@ -53,8 +53,41 @@ const allAvailableTaskInToDb = async () => {
 };
 
 const myTaskInToDb = async (buyer_id: number) => {
-  const result = await pool.query(`SELECT * FROM tasks WHERE buyer_id = $1 ORDER BY id DESC`, [buyer_id]);
+  const result = await pool.query(
+    `SELECT * FROM tasks WHERE buyer_id = $1 ORDER BY id DESC`,
+    [buyer_id],
+  );
 
-  return result.rows
+  return result.rows;
 };
-export const taskService = { addTaskInToDb, allAvailableTaskInToDb,myTaskInToDb };
+
+const deleteTaskInToDb = async (id:number,buyer_id: number) => {
+  const taskData = await pool.query(
+    `SELECT required_workers, payable_amount FROM tasks WHERE id = $1 AND buyer_id = $2 `,
+    [id, buyer_id],
+  );
+
+  if(taskData.rows.length===0){
+    throw new Error("Task not found or unauthorized!")
+  }
+
+  const{required_workers,payable_amount}=taskData.rows[0]
+
+  const refill_amount=required_workers * payable_amount;
+
+
+  await pool.query(`UPDATE users SET coins=coins+$1 WHERE id=$2`,[refill_amount, buyer_id])
+
+  const result = await pool.query(`DELETE FROM tasks WHERE id=$1 AND buyer_id=$2 RETURNING *`, [
+    id,buyer_id
+  ]);
+
+  return result.rows[0];
+};
+
+export const taskService = {
+  addTaskInToDb,
+  allAvailableTaskInToDb,
+  myTaskInToDb,
+  deleteTaskInToDb
+};
